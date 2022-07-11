@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { carts, Prisma } from '@prisma/client';
-import { PrismaService } from 'src/prisma.service';
+import { Carts, Prisma } from '@prisma/client';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateCartDto } from './dto/create-cart.dto';
 import { UpdateCartDto } from './dto/update-cart.dto';
 
@@ -8,31 +8,31 @@ import { UpdateCartDto } from './dto/update-cart.dto';
 export class CartsService {
   constructor(private prisma: PrismaService) { }
 
-  async cart(cartWhereUniqueInput: Prisma.cartsWhereUniqueInput): Promise<carts> {
+  async cart(cartWhereUniqueInput: Prisma.CartsWhereUniqueInput): Promise<Carts> {
     return this.prisma.carts.findUnique({ where: cartWhereUniqueInput })
   }
 
   async carts(params: {
     skip?: number
     take?: number
-    cursor?: Prisma.cartsWhereUniqueInput
-    where?: Prisma.cartsWhereInput
-    orderBy?: Prisma.cartsOrderByWithRelationInput
-  }): Promise<carts[]> {
+    cursor?: Prisma.CartsWhereUniqueInput
+    where?: Prisma.CartsWhereInput
+    orderBy?: Prisma.CartsOrderByWithRelationInput
+  }): Promise<Carts[]> {
     const { cursor, orderBy, skip, take, where } = params
     return this.prisma.carts.findMany({ cursor, orderBy, skip, take, where })
   }
 
-  async createCart(data: Prisma.cartsCreateInput): Promise<carts> {
+  async createCart(data: Prisma.CartsCreateInput): Promise<Carts> {
     return this.prisma.carts.create({ data })
   }
 
-  async updateCart(params: { where: Prisma.cartsWhereUniqueInput, data: Prisma.cartsUpdateInput }): Promise<carts> {
+  async updateCart(params: { where: Prisma.CartsWhereUniqueInput, data: Prisma.CartsUpdateInput }): Promise<Carts> {
     const { data, where } = params
     return this.prisma.carts.update({ where, data })
   }
 
-  async deleteCart(where: Prisma.cartsWhereUniqueInput): Promise<carts> {
+  async deleteCart(where: Prisma.CartsWhereUniqueInput): Promise<Carts> {
     return this.prisma.carts.delete({ where })
   }
 

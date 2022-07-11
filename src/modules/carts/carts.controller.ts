@@ -5,7 +5,7 @@ import { UpdateCartDto } from './dto/update-cart.dto';
 
 @Controller('carts')
 export class CartsController {
-  constructor(private readonly cartsService: CartsService) {}
+  constructor(private readonly cartsService: CartsService) { }
 
   @Post()
   create(@Body() createCartDto: CreateCartDto) {

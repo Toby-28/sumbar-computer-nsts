@@ -7,48 +7,60 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model banner_big {
+model Banner_big {
   id        Int     @id(map: "big_banner_pkey") @default(autoincrement())
   image_url String  @db.VarChar(255)
   link      String? @db.VarChar(255)
+
+  @@map("banner_big")
 }
 
-model banner_small {
+model Banner_small {
   id        Int     @id(map: "small_banner_pkey") @default(autoincrement())
   image_url String  @db.VarChar(255)
   link      String? @db.VarChar(255)
+
+  @@map("banner_small")
 }
 
-model brands {
+model Brands {
   id       Int        @id @default(autoincrement())
   name     String     @unique(map: "brandname") @db.VarChar(255)
   logo_url String     @db.VarChar(255)
-  products products[]
+  products Products[]
+
+  @@map("brands")
 }
 
-model carts {
+model Carts {
   id       Int    @id(map: "cart_pkey") @default(autoincrement())
   user_id  Int
   products Json[] @db.Json
   users    Users  @relation(fields: [user_id], references: [id], onDelete: Cascade, map: "username")
+
+  @@map("carts")
 }
 
-model category {
-  id    Int     @id @default(autoincrement())
-  title String  @unique(map: "title") @db.VarChar(45)
-  link  String? @db.VarChar(255)
-  data  Json[]  @db.Json
+model Category {
+  id          Int           @id @default(autoincrement())
+  name        String        @unique(map: "title") @db.VarChar(45)
+  link        String        @db.VarChar(255)
+  subcategory Subcategory[] @relation("categoryTosubcategory")
+
+  @@map("category")
 }
 
-model products {
-  id          Int      @id @default(autoincrement())
-  name        String   @unique(map: "productname") @db.VarChar(200)
-  part_number String   @db.VarChar(100)
-  image_urls  String[] @db.VarChar(255)
-  amount      Int      @default(1)
+model Products {
+  id          Int    @id @default(autoincrement())
+  name        String @unique(map: "productname") @db.VarChar(200)
+  part_number String @db.VarChar(100)
+  amount      Int    @default(1)
   price       Float
   brand_id    Int
-  brands      brands   @relation(fields: [brand_id], references: [id], onUpdate: NoAction, map: "brandname")
+  image_url   String @db.VarChar(255)
+  brands      Brands @relation(fields: [brand_id], references: [id], onUpdate: NoAction, map: "brandname")
+
+  @@map("products")
 }
 
 model Users {
@@ -56,7 +68,22 @@ model Users {
   phone Int
   email String? @db.VarChar(255)
   name  String  @db.VarChar(45)
-  carts carts[]
+  carts Carts[]
 
   @@map("users")
+}
+
+model Subcategory {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique(map: "subcategoryname") @db.VarChar(45)
+  link        String   @db.VarChar(255)
+  category_id Int
+  category    Category @relation("categoryTosubcategory", fields: [category_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "categoryname")
+
+  @@map("subcategory")
+}
+
+model tabs {
+  id   Int    @id @default(autoincrement())
+  name String @db.VarChar(45)
 }
